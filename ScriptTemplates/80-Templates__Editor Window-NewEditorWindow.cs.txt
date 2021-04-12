@@ -1,0 +1,22 @@
+﻿using UnityEditor;
+using UnityEngine;
+
+namespace #NAMESPACE#
+{
+    public class #SCRIPTNAME# : EditorWindow
+    {
+        [MenuItem("#MENU_PATH#")]
+        static void Init() 
+        {
+            #SCRIPTNAME# window = EditorWindow.GetWindow(typeof(#SCRIPTNAME#)) as #SCRIPTNAME#;
+            window.titleContent = new GUIContent("#SCRIPTNAME#");
+            window.autoRepaintOnSceneChange = true;
+            window.Show();
+        }
+
+        protected virtual void OnGUI()
+        {
+        #NOTRIM#
+        }
+    }   
+}
