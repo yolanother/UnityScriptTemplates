@@ -42,6 +42,7 @@ namespace DoubTech.Templates.Editor
             EditorGUILayout.LabelField("Template Keywords", EditorStyles.boldLabel);
             DocumentKeyword(ScriptProcessor.KEYWORD_NAMESPACE, "Value is replaced with a namespace based on the path the script is created in.");
             DocumentKeyword(ScriptProcessor.KEYWORD_MENUPATH, "The root of the path to be used for menus for this project.");
+            DocumentKeyword(ScriptProcessor.KEYWORD_CUSTOMEDITOR_TYPE, "The name of the type to be edited by a custom editor derived from the name of the editor");
             templateSettings.ApplyModifiedProperties();
         }
 

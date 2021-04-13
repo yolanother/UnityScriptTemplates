@@ -1,0 +1,29 @@
+﻿using UnityEditor;
+using UnityEngine;
+
+namespace #NAMESPACE#
+{
+    [CustomEditor(typeof(#KEYWORD_CUSTOMEDITOR_TYPE#))]
+    public class #SCRIPTNAME# : Editor
+    {
+        class Content
+        {
+            #region GUIContent
+            #endregion
+
+            #region Styles
+            #endregion
+            
+            static Content()
+            {
+            // Style initialization
+            #NOTRIM#
+            }
+        }
+
+        public override void OnInspectorGUI()
+        {
+        #NOTRIM#
+        }
+    }   
+}

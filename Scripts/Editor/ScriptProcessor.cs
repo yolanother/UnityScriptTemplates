@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 
 namespace DoubTech.Templates.Editor
@@ -11,6 +12,7 @@ namespace DoubTech.Templates.Editor
     {
         public const string KEYWORD_NAMESPACE = "#NAMESPACE#";
         public const string KEYWORD_MENUPATH = "#MENU_PATH#";
+        public const string KEYWORD_CUSTOMEDITOR_TYPE = "#KEYWORD_CUSTOMEDITOR_TYPE#";
 
         static void OnWillCreateAsset(string assetName)
         {
@@ -26,9 +28,16 @@ namespace DoubTech.Templates.Editor
                 // Handlers
                 content = HandleNamespace(content, pathSegments);
                 content = HandleMenuPath(content, scriptName);
+                content = CustomEditor(content, scriptName);
                 
                 File.WriteAllText(assetPath, content);
             }
+        }
+
+        private static string CustomEditor(string content, string scriptName)
+        {
+            var name = scriptName.Replace("Editor", "");
+            return content.Replace(KEYWORD_CUSTOMEDITOR_TYPE, name);
         }
 
         private static string HandleMenuPath(string content, string scriptName)

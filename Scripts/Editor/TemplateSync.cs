@@ -42,7 +42,7 @@ namespace DoubTech.Templates.Editor
                 {
                     Debug.Log("Found new template: " + file);
                     if (!Directory.Exists(templateDir)) Directory.CreateDirectory(templateDir);
-                    file.CopyTo(Application.dataPath + "/ScriptTemplates/" + file.Name);
+                    file.CopyTo(Application.dataPath + "/ScriptTemplates/" + file.Name, true);
                 }
                 
                 if (EditorUtility.DisplayDialog("Templates Changed",
