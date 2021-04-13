@@ -12,10 +12,12 @@ namespace DoubTech.Templates.Editor
         [SerializeField] public string rootPackageName;
         [SerializeField] public string menuRoot;
         [SerializeField] public string[] ignoredNamespacePathSegments;
+        [SerializeField] public string[] additionalSeparators;
+        [SerializeField] public Replacement[] replacementExpressions;
+        [SerializeField] public NameFormat format;
 
         [NonSerialized]
         private static TemplateSettings settings;
-        
         internal static TemplateSettings GetOrCreateSettings()
         {
             if (null == settings)
@@ -34,7 +36,10 @@ namespace DoubTech.Templates.Editor
                 settings = ScriptableObject.CreateInstance<TemplateSettings>();
                 settings.rootPackageName = PlayerSettings.companyName.Replace(" ", "");
                 settings.menuRoot = "Tools/";
-                settings.ignoredNamespacePathSegments = new string[] {"Assets", "Packages", "Scripts"};
+                settings.ignoredNamespacePathSegments = new string[] {"Scripts"};
+                settings.additionalSeparators = new string[0];
+                settings.replacementExpressions = new Replacement[0];
+                settings.format = NameFormat.CamelCase;
                 AssetDatabase.CreateAsset(settings, settingsPath);
                 AssetDatabase.SaveAssets();
                 settings = AssetDatabase.LoadAssetAtPath<TemplateSettings>(settingsPath);
@@ -46,5 +51,19 @@ namespace DoubTech.Templates.Editor
         {
             return new SerializedObject(GetOrCreateSettings());
         }
+    }
+
+    public enum NameFormat
+    {
+        PascalCase,
+        CamelCase,
+        LowerCase,
+    }
+
+    [Serializable]
+    public struct Replacement
+    {
+        public string expression;
+        public string replacement;
     }
 }

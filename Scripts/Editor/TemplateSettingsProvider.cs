@@ -16,6 +16,9 @@ namespace DoubTech.Templates.Editor
             public static GUIContent menuRoot = new GUIContent("Menu Root", "The name to use at the root of new menu items for this project.");
             public static GUIContent rootPackageName = new GUIContent("Root Namespace Name", "The name to use for the root of all namespaces.");
             public static GUIContent ignoredPathSegments = new GUIContent("Ignored Path Segments", "Directories that should be ignored in creation of a namespace");
+            public static GUIContent additionalSeparators = new GUIContent("Additional Namespace Separators", "Additional strings to use to split directory names into namespaces");
+            public static GUIContent replacementExpressions = new GUIContent("Replacement Expressions", "Regular expressions to replace parts of segments");
+            public static GUIContent format = new GUIContent("Casing Format", "The name casing style to use for the namespace");
         }
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
@@ -32,6 +35,9 @@ namespace DoubTech.Templates.Editor
             EditorGUILayout.LabelField("Namespace Settings", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("rootPackageName"), Styles.rootPackageName);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("ignoredNamespacePathSegments"), Styles.ignoredPathSegments);
+            EditorGUILayout.PropertyField(templateSettings.FindProperty("additionalSeparators"), Styles.additionalSeparators);
+            EditorGUILayout.PropertyField(templateSettings.FindProperty("replacementExpressions"), Styles.replacementExpressions);
+            EditorGUILayout.PropertyField(templateSettings.FindProperty("format"), Styles.format);
             
             EditorGUILayout.LabelField("Template Keywords", EditorStyles.boldLabel);
             DocumentKeyword(ScriptProcessor.KEYWORD_NAMESPACE, "Value is replaced with a namespace based on the path the script is created in.");
