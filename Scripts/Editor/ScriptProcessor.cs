@@ -26,21 +26,28 @@ namespace DoubTech.Templates.Editor
                 Debug.Log("asset: " + assetName);
                 
                 // Handlers
-                content = HandleNamespace(content, pathSegments);
-                content = HandleMenuPath(content, scriptName);
-                content = CustomEditor(content, scriptName);
+                content = FormatTemplate(content, scriptName, pathSegments);
                 
                 File.WriteAllText(assetPath, content);
             }
         }
 
-        private static string CustomEditor(string content, string scriptName)
+        public static string FormatTemplate(string template, string scriptName, string[] pathSegments)
+        {
+            template = HandleNamespace(template, pathSegments);
+            template = HandleMenuPath(template, scriptName);
+            template = CustomEditor(template, scriptName);
+
+            return template;
+        }
+
+        public static string CustomEditor(string content, string scriptName)
         {
             var name = scriptName.Replace("Editor", "");
             return content.Replace(KEYWORD_CUSTOMEDITOR_TYPE, name);
         }
 
-        private static string HandleMenuPath(string content, string scriptName)
+        public static string HandleMenuPath(string content, string scriptName)
         {
             var settings = TemplateSettings.GetOrCreateSettings();
             var defaultMenuPath = settings.menuRoot;
@@ -54,7 +61,7 @@ namespace DoubTech.Templates.Editor
             return content;
         }
 
-        private static string HandleNamespace(string content, string[] pathSegments)
+        public static string HandleNamespace(string content, string[] pathSegments)
         {
             var settings = TemplateSettings.GetOrCreateSettings();
             List<string> fullyParsedSegments = new List<string>();
@@ -133,14 +140,14 @@ namespace DoubTech.Templates.Editor
             return content.Replace(KEYWORD_NAMESPACE, namespaceString);
         }
         
-        static string CamelCase(string s)
+        public static string CamelCase(string s)
         {
             if (s.Length == 0) return "";
             s = Regex.Replace(s, @"\s+([a-z])", m => m.Groups[1].Value.ToUpper());
             return char.ToLower(s[0]) + s.Substring(1);
         }
         
-        static string PascalCase(string s)
+        public static string PascalCase(string s)
         {
             var x = CamelCase(s);
             return char.ToUpper(x[0]) + x.Substring(1);

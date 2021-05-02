@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -52,6 +54,10 @@ namespace DoubTech.Templates.Editor
             EditorGUILayout.LabelField(keyword, GUILayout.Width(200));
             EditorGUILayout.LabelField(description);
             GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(200);
+            EditorGUILayout.LabelField(ScriptProcessor.FormatTemplate(keyword, "SampleScript", GetClickedDirFullPath()));
+            GUILayout.EndHorizontal();
         }
 
         // Register the SettingsProvider
@@ -63,6 +69,18 @@ namespace DoubTech.Templates.Editor
             // Automatically extract all keywords from the Styles.
             provider.keywords = GetSearchKeywordsFromGUIContentProperties<Styles>();
             return provider;
+        }
+        
+        private static string[] GetClickedDirFullPath()
+        {
+            string clickedAssetGuid = Selection.assetGUIDs[0];
+            string clickedPath      = AssetDatabase.GUIDToAssetPath(clickedAssetGuid);
+            string clickedPathFull  = Path.Combine(Directory.GetCurrentDirectory(), clickedPath);
+ 
+            FileAttributes attr = File.GetAttributes(clickedPathFull);
+            string path = attr.HasFlag(FileAttributes.Directory) ? clickedPathFull : Path.GetDirectoryName(clickedPathFull);
+            path = path.Substring(Application.dataPath.Length - 7).Replace("\\", "/");
+            return path.Split(new string[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
         }
     }   
 }

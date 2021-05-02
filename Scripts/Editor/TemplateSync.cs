@@ -35,6 +35,10 @@ namespace DoubTech.Templates.Editor
         public static void Sync(string fullPath)
         {
             var templateDir = Application.dataPath + "/ScriptTemplates";
+            if (!Directory.Exists(templateDir))
+            {
+                Directory.CreateDirectory(templateDir);
+            }
             if (!DirectoryComparer.Compare(fullPath, templateDir,
                 "*.txt", out var newFiles) && newFiles.Length > 0)
             {
