@@ -13,6 +13,8 @@ namespace DoubTech.Templates.Editor
         public const string KEYWORD_NAMESPACE = "#NAMESPACE#";
         public const string KEYWORD_MENUPATH = "#MENU_PATH#";
         public const string KEYWORD_CUSTOMEDITOR_TYPE = "#KEYWORD_CUSTOMEDITOR_TYPE#";
+        public const string KEYWORD_SOV_TYPE = "#SOVTYPE#";
+        public const string KEYWORD_SOV_UNALTEREDTYPE = "#SOVUNALTEREDTYPE#";
 
         static void OnWillCreateAsset(string assetName)
         {
@@ -27,7 +29,6 @@ namespace DoubTech.Templates.Editor
 
                 // Handlers
                 content = FormatTemplate(content, scriptName, pathSegments);
-
                 File.WriteAllText(assetPath, content);
             }
         }
@@ -37,8 +38,18 @@ namespace DoubTech.Templates.Editor
             template = HandleNamespace(template, pathSegments);
             template = HandleMenuPath(template, scriptName);
             template = CustomEditor(template, scriptName);
+            template = ScriptableObjectVariable(template, scriptName);
 
             return template;
+        }
+
+        private static string ScriptableObjectVariable(string content, string scriptName)
+        {
+            var typename = scriptName.Replace("ScriptableVariable", "");
+            var alteredTypename = char.ToUpperInvariant(typename[0]) + typename.Substring(1);
+            content = content.Replace(KEYWORD_SOV_TYPE, alteredTypename);
+            content = content.Replace(KEYWORD_SOV_UNALTEREDTYPE, typename);
+            return content;
         }
 
         public static string CustomEditor(string content, string scriptName)

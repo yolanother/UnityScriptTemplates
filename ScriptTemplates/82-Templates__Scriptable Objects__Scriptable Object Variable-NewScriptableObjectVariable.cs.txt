@@ -1,0 +1,21 @@
+﻿using System;
+using UnityEngine;
+
+namespace #NAMESPACE#
+{
+    [CreateAssetMenu(fileName="#SOVTYPE#Variable", menuName="#SCRIPTNAME#")]
+    public class #SCRIPTNAME# : ScriptableObject
+    {
+        public #SOVUNALTEREDTYPE# value;
+    }
+
+    [Serializable]
+    public class #SOVTYPE#Reference
+    {
+        public bool useConstant;
+        public #SOVUNALTEREDTYPE# constantValue;
+        public #SOVTYPE#Variable variable;
+
+        public #SOVUNALTEREDTYPE# Value => useConstant ? constantValue : variable.value;
+    }
+}
