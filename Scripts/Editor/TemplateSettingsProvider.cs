@@ -9,7 +9,7 @@ namespace DoubTech.Templates.Editor
     public class TemplateSettingsProvider : SettingsProvider
     {
         private SerializedObject templateSettings;
-        
+
         public TemplateSettingsProvider(string path, SettingsScope scope = SettingsScope.Project)
             : base(path, scope) {}
 
@@ -33,14 +33,14 @@ namespace DoubTech.Templates.Editor
         {
             EditorGUILayout.LabelField("Menu Creation Settings", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("menuRoot"), Styles.menuRoot);
-            
+
             EditorGUILayout.LabelField("Namespace Settings", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("rootPackageName"), Styles.rootPackageName);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("ignoredNamespacePathSegments"), Styles.ignoredPathSegments);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("additionalSeparators"), Styles.additionalSeparators);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("replacementExpressions"), Styles.replacementExpressions);
             EditorGUILayout.PropertyField(templateSettings.FindProperty("format"), Styles.format);
-            
+
             EditorGUILayout.LabelField("Template Keywords", EditorStyles.boldLabel);
             DocumentKeyword(ScriptProcessor.KEYWORD_NAMESPACE, "Value is replaced with a namespace based on the path the script is created in.");
             DocumentKeyword(ScriptProcessor.KEYWORD_MENUPATH, "The root of the path to be used for menus for this project.");
@@ -70,17 +70,22 @@ namespace DoubTech.Templates.Editor
             provider.keywords = GetSearchKeywordsFromGUIContentProperties<Styles>();
             return provider;
         }
-        
+
         private static string[] GetClickedDirFullPath()
         {
-            string clickedAssetGuid = Selection.assetGUIDs[0];
-            string clickedPath      = AssetDatabase.GUIDToAssetPath(clickedAssetGuid);
-            string clickedPathFull  = Path.Combine(Directory.GetCurrentDirectory(), clickedPath);
- 
-            FileAttributes attr = File.GetAttributes(clickedPathFull);
-            string path = attr.HasFlag(FileAttributes.Directory) ? clickedPathFull : Path.GetDirectoryName(clickedPathFull);
-            path = path.Substring(Application.dataPath.Length - 7).Replace("\\", "/");
-            return path.Split(new string[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+            if(Selection.assetGUIDs.Length > 0)
+            {
+                string clickedAssetGuid = Selection.assetGUIDs[0];
+                string clickedPath      = AssetDatabase.GUIDToAssetPath(clickedAssetGuid);
+                string clickedPathFull  = Path.Combine(Directory.GetCurrentDirectory(), clickedPath);
+
+                FileAttributes attr = File.GetAttributes(clickedPathFull);
+                string path = attr.HasFlag(FileAttributes.Directory) ? clickedPathFull : Path.GetDirectoryName(clickedPathFull);
+                path = path.Substring(Application.dataPath.Length - 7).Replace("\\", "/");
+                return path.Split(new string[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            return new string[0];
         }
-    }   
+    }
 }

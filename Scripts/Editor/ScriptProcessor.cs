@@ -22,12 +22,12 @@ namespace DoubTech.Templates.Editor
                 var content = File.ReadAllText(assetPath);
                 var pathSegments = assetPath.Split('/');
                 var scriptName = pathSegments[pathSegments.Length - 1].Replace(".cs", "");
-                
+
                 Debug.Log("asset: " + assetName);
-                
+
                 // Handlers
                 content = FormatTemplate(content, scriptName, pathSegments);
-                
+
                 File.WriteAllText(assetPath, content);
             }
         }
@@ -77,29 +77,32 @@ namespace DoubTech.Templates.Editor
                 }
             }
 
-            if (fullyParsedSegments[0] == "Packages")
+            if (fullyParsedSegments.Count > 0)
             {
-                var packageName = fullyParsedSegments[1];
-                fullyParsedSegments.RemoveRange(0, 2);
-                fullyParsedSegments.InsertRange(0, packageName.Split('.'));
+                if (fullyParsedSegments[0] == "Packages")
+                {
+                    var packageName = fullyParsedSegments[1];
+                    fullyParsedSegments.RemoveRange(0, 2);
+                    fullyParsedSegments.InsertRange(0, packageName.Split('.'));
+                }
+
+                if (fullyParsedSegments[0] == "Assets")
+                {
+                    fullyParsedSegments.RemoveAt(0);
+                }
             }
 
-            if (fullyParsedSegments[0] == "Assets")
-            {
-                fullyParsedSegments.RemoveAt(0);
-            }
-            
             string[] ignoredPathSegments = settings.ignoredNamespacePathSegments;
             string rootNamespaceString = settings.rootPackageName;
             HashSet<string> ignored = new HashSet<string>();
-            
+
             foreach (var keyword in ignoredPathSegments)
             {
                 ignored.Add(keyword.ToLower());
             }
 
             ignored.Add(rootNamespaceString.ToLower());
-            
+
             string namespaceString = rootNamespaceString;
             for (int i = 0; i < fullyParsedSegments.Count - 1; i++)
             {
@@ -119,7 +122,7 @@ namespace DoubTech.Templates.Editor
                             seg = seg.ToLower();
                             break;
                     }
-                    
+
                     if (namespaceString.Length > 0)
                     {
                         namespaceString += ".";
@@ -139,14 +142,14 @@ namespace DoubTech.Templates.Editor
 
             return content.Replace(KEYWORD_NAMESPACE, namespaceString);
         }
-        
+
         public static string CamelCase(string s)
         {
             if (s.Length == 0) return "";
             s = Regex.Replace(s, @"\s+([a-z])", m => m.Groups[1].Value.ToUpper());
             return char.ToLower(s[0]) + s.Substring(1);
         }
-        
+
         public static string PascalCase(string s)
         {
             var x = CamelCase(s);
