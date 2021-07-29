@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿#HEADER#
+using UnityEngine;
 
 namespace #NAMESPACE#
 {
     public class #SCRIPTNAME# : MonoBehaviour
     {
     #NOTRIM#
-    }   
+    }
 }

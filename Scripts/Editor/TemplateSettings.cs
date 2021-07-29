@@ -8,16 +8,18 @@ namespace DoubTech.Templates.Editor
     public class TemplateSettings : ScriptableObject
     {
         public const string settingsPath = "Assets/Editor/TemplateSettings.asset";
-        
+
         [SerializeField] public string rootPackageName;
         [SerializeField] public string menuRoot;
         [SerializeField] public string[] ignoredNamespacePathSegments;
         [SerializeField] public string[] additionalSeparators;
         [SerializeField] public Replacement[] replacementExpressions;
         [SerializeField] public NameFormat format;
+        [SerializeField] public string header;
 
         [NonSerialized]
         private static TemplateSettings settings;
+
         internal static TemplateSettings GetOrCreateSettings()
         {
             if (null == settings)
@@ -36,7 +38,7 @@ namespace DoubTech.Templates.Editor
                 settings = ScriptableObject.CreateInstance<TemplateSettings>();
                 settings.rootPackageName = PlayerSettings.companyName.Replace(" ", "");
                 settings.menuRoot = "Tools/";
-                settings.ignoredNamespacePathSegments = new string[] {"Scripts"};
+                settings.ignoredNamespacePathSegments = new string[] {"Scripts","Runtime","Editor"};
                 settings.additionalSeparators = new string[0];
                 settings.replacementExpressions = new Replacement[0];
                 settings.format = NameFormat.CamelCase;

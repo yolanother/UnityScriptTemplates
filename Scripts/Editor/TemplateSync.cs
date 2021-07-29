@@ -13,7 +13,6 @@ namespace DoubTech.Templates.Editor
             foreach (var guid in templatePaths)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
-                Debug.Log("Loading path " + path);
                 var templatePath = AssetDatabase.LoadAssetAtPath<ScriptTemplatePath>(path);
                 Sync(templatePath);
             }
@@ -48,7 +47,7 @@ namespace DoubTech.Templates.Editor
                     if (!Directory.Exists(templateDir)) Directory.CreateDirectory(templateDir);
                     file.CopyTo(Application.dataPath + "/ScriptTemplates/" + file.Name, true);
                 }
-                
+
                 if (EditorUtility.DisplayDialog("Templates Changed",
                     "Your script templates have changed and have been updated. Would you like to restart the editor now? Changes will not be applied for new files until you restart the editor.", "Yes", "No")
                 )
@@ -63,5 +62,5 @@ namespace DoubTech.Templates.Editor
             var path = AssetDatabase.GetAssetPath(templatePath);
             return new DirectoryInfo(new FileInfo(path).DirectoryName + "/" + templatePath.path).FullName;
         }
-    }   
+    }
 }
