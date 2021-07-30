@@ -36,13 +36,26 @@ namespace DoubTech.Templates.Editor
 
         public static string FormatTemplate(string template, string scriptName, string[] pathSegments)
         {
+            var sharedSettings = TemplateSettings.GetOrCreateEditorSettings();
             var settings = TemplateSettings.GetOrCreateSettings();
-            template = HandleNamespace(template, pathSegments);
-            template = HandleMenuPath(template, scriptName);
+
+            template = HandleNamespace(settings, template, pathSegments);
+            template = HandleNamespace(sharedSettings, template, pathSegments);
+
+            template = HandleMenuPath(settings, template, scriptName);
+            template = HandleMenuPath(sharedSettings, template, scriptName);
+
             template = CustomEditor(template, scriptName);
             template = ScriptableObjectVariable(template, scriptName);
+
+            if (!string.IsNullOrEmpty(settings.header))
+            {
+                template = HandleVariable(template, KEYWORD_HEADER + @"[\s]+",
+                    string.IsNullOrEmpty(settings.header) ? "" : settings.header + "\n\n");
+            }
+
             template = HandleVariable(template, KEYWORD_HEADER + @"[\s]+",
-                string.IsNullOrEmpty(settings.header) ? "" : settings.header + "\n\n");
+                string.IsNullOrEmpty(sharedSettings.header) ? "" : sharedSettings.header + "\n\n");
 
             return template;
         }
@@ -67,9 +80,8 @@ namespace DoubTech.Templates.Editor
             return Regex.Replace(content, variable, value);
         }
 
-        public static string HandleMenuPath(string content, string scriptName)
+        public static string HandleMenuPath(TemplateSettings settings, string content, string scriptName)
         {
-            var settings = TemplateSettings.GetOrCreateSettings();
             var defaultMenuPath = settings.menuRoot;
             if (defaultMenuPath.Length == 0)
             {
@@ -81,9 +93,8 @@ namespace DoubTech.Templates.Editor
             return content;
         }
 
-        public static string HandleNamespace(string content, string[] pathSegments)
+        public static string HandleNamespace(TemplateSettings settings, string content, string[] pathSegments)
         {
-            var settings = TemplateSettings.GetOrCreateSettings();
             List<string> fullyParsedSegments = new List<string>();
             foreach (var segment in pathSegments)
             {

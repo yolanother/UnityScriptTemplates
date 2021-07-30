@@ -19,6 +19,31 @@ namespace DoubTech.Templates.Editor
 
         [NonSerialized]
         private static TemplateSettings settings;
+        private static TemplateSettings editorSettings;
+
+        internal static TemplateSettings GetOrCreateEditorSettings()
+        {
+            if (null == editorSettings)
+            {
+                editorSettings = ScriptableObject.CreateInstance<TemplateSettings>();
+                InitValues(editorSettings);
+
+                // Load if present
+                var settings = EditorPrefs.GetString("DT::TEMPLATES::SETTINGS", null);
+                if (!string.IsNullOrEmpty(settings))
+                {
+                    EditorJsonUtility.FromJsonOverwrite(settings, editorSettings);
+                }
+            }
+
+            return editorSettings;
+        }
+
+        public static void SaveEditorSettings()
+        {
+            var json = JsonUtility.ToJson(GetOrCreateEditorSettings());
+            EditorPrefs.SetString("DT::TEMPLATES::SETTINGS", json);
+        }
 
         internal static TemplateSettings GetOrCreateSettings()
         {
@@ -35,18 +60,24 @@ namespace DoubTech.Templates.Editor
                 {
                     Directory.CreateDirectory(dir.FullName);
                 }
+
                 settings = ScriptableObject.CreateInstance<TemplateSettings>();
-                settings.rootPackageName = PlayerSettings.companyName.Replace(" ", "");
-                settings.menuRoot = "Tools/";
-                settings.ignoredNamespacePathSegments = new string[] {"Scripts","Runtime","Editor"};
-                settings.additionalSeparators = new string[0];
-                settings.replacementExpressions = new Replacement[0];
-                settings.format = NameFormat.CamelCase;
+                InitValues(settings);
                 AssetDatabase.CreateAsset(settings, settingsPath);
                 AssetDatabase.SaveAssets();
                 settings = AssetDatabase.LoadAssetAtPath<TemplateSettings>(settingsPath);
             }
             return settings;
+        }
+
+        private static void InitValues(TemplateSettings settings)
+        {
+            settings.rootPackageName = PlayerSettings.companyName.Replace(" ", "");
+            settings.menuRoot = "Tools/";
+            settings.ignoredNamespacePathSegments = new string[] {"Scripts", "Runtime", "Editor"};
+            settings.additionalSeparators = new string[0];
+            settings.replacementExpressions = new Replacement[0];
+            settings.format = NameFormat.PascalCase;
         }
 
         internal static SerializedObject GetSerializedSettings()

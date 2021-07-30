@@ -6,14 +6,14 @@ using UnityEngine.UIElements;
 
 namespace DoubTech.Templates.Editor
 {
-    public class TemplateSettingsProvider : SettingsProvider
+    public abstract class BaseTemplateSettingsProvider : SettingsProvider
     {
-        private SerializedObject templateSettings;
+        protected abstract SerializedObject SerializedTemplateSettings { get; }
 
-        public TemplateSettingsProvider(string path, SettingsScope scope = SettingsScope.Project)
+        public BaseTemplateSettingsProvider(string path, SettingsScope scope = SettingsScope.Project)
             : base(path, scope) {}
 
-        class Styles
+        protected class Styles
         {
             public static GUIContent menuRoot = new GUIContent("Menu Root", "The name to use at the root of new menu items for this project.");
             public static GUIContent rootPackageName = new GUIContent("Root Namespace Name", "The name to use for the root of all namespaces.");
@@ -25,25 +25,19 @@ namespace DoubTech.Templates.Editor
                 "A common file header to be used. Ex: Copyright header");
         }
 
-        public override void OnActivate(string searchContext, VisualElement rootElement)
-        {
-            // This function is called when the user clicks on the MyCustom element in the Settings window.
-            templateSettings = TemplateSettings.GetSerializedSettings();
-        }
-
         public override void OnGUI(string searchContext)
         {
             EditorGUILayout.LabelField("Menu Creation Settings", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(templateSettings.FindProperty("menuRoot"), Styles.menuRoot);
+            EditorGUILayout.PropertyField(SerializedTemplateSettings.FindProperty("menuRoot"), Styles.menuRoot);
 
             EditorGUILayout.LabelField("Namespace Settings", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(templateSettings.FindProperty("rootPackageName"), Styles.rootPackageName);
-            EditorGUILayout.PropertyField(templateSettings.FindProperty("ignoredNamespacePathSegments"), Styles.ignoredPathSegments);
-            EditorGUILayout.PropertyField(templateSettings.FindProperty("additionalSeparators"), Styles.additionalSeparators);
-            EditorGUILayout.PropertyField(templateSettings.FindProperty("replacementExpressions"), Styles.replacementExpressions);
-            EditorGUILayout.PropertyField(templateSettings.FindProperty("format"), Styles.format);
+            EditorGUILayout.PropertyField(SerializedTemplateSettings.FindProperty("rootPackageName"), Styles.rootPackageName);
+            EditorGUILayout.PropertyField(SerializedTemplateSettings.FindProperty("ignoredNamespacePathSegments"), Styles.ignoredPathSegments);
+            EditorGUILayout.PropertyField(SerializedTemplateSettings.FindProperty("additionalSeparators"), Styles.additionalSeparators);
+            EditorGUILayout.PropertyField(SerializedTemplateSettings.FindProperty("replacementExpressions"), Styles.replacementExpressions);
+            EditorGUILayout.PropertyField(SerializedTemplateSettings.FindProperty("format"), Styles.format);
             GUILayout.Label(Styles.header);
-            var headerProp = templateSettings.FindProperty("header");
+            var headerProp = SerializedTemplateSettings.FindProperty("header");
             headerProp.stringValue = EditorGUILayout.TextArea(headerProp.stringValue, GUILayout.Height(200));
 
             EditorGUILayout.LabelField("Template Keywords", EditorStyles.boldLabel);
@@ -53,7 +47,16 @@ namespace DoubTech.Templates.Editor
                 "The name of the type to be edited by a custom editor derived from the name of the editor");
             DocumentKeyword(ScriptProcessor.KEYWORD_HEADER,
                 "A common file header to be used. Ex: Copyright header");
-            templateSettings.ApplyModifiedProperties();
+
+            if (SerializedTemplateSettings.hasModifiedProperties)
+            {
+                OnSave();
+            }
+        }
+
+        protected virtual void OnSave()
+        {
+            SerializedTemplateSettings.ApplyModifiedProperties();
         }
 
         private void DocumentKeyword(string keyword, string description)
@@ -66,17 +69,6 @@ namespace DoubTech.Templates.Editor
             GUILayout.Space(200);
             EditorGUILayout.LabelField(ScriptProcessor.FormatTemplate(keyword, "SampleScript", GetClickedDirFullPath()));
             GUILayout.EndHorizontal();
-        }
-
-        // Register the SettingsProvider
-        [SettingsProvider]
-        public static SettingsProvider CreateTemplateSettingsProvider()
-        {
-            var provider = new TemplateSettingsProvider("Project/Template Settings", SettingsScope.Project);
-
-            // Automatically extract all keywords from the Styles.
-            provider.keywords = GetSearchKeywordsFromGUIContentProperties<Styles>();
-            return provider;
         }
 
         private static string[] GetClickedDirFullPath()
