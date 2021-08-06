@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DoubTech.Templates.Editor
+namespace DoubTech.Templates
 {
     public abstract class BaseTemplateSettingsProvider : SettingsProvider
     {

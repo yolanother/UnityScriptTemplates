@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DoubTech.Templates.Editor
+namespace DoubTech.Templates
 {
     public class ScriptTemplatePath : ScriptableObject
     {

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace DoubTech.Templates.Editor
+namespace DoubTech.Templates
 {
     public class ScriptProcessor : UnityEditor.AssetModificationProcessor
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace DoubTech.Templates.Editor
+namespace DoubTech.Templates
 {
     [CustomEditor(typeof(ScriptTemplatePath))]
     public class ScriptTemplatePathEditor : UnityEditor.Editor
@@ -15,7 +15,7 @@ namespace DoubTech.Templates.Editor
             public static GUIContent browse = new GUIContent("Browse");
 
             public static GUIStyle ellipsis;
-            
+
             static Content()
             {
                 borderlessButtonStyle = new GUIStyle();
@@ -36,7 +36,7 @@ namespace DoubTech.Templates.Editor
             var templatePath = target as ScriptTemplatePath;
             GUILayout.Label("Default Template Path", EditorStyles.boldLabel);
             GUILayout.Label(TemplateSync.GetFullPath(templatePath));
-            
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Additional Template Paths", EditorStyles.boldLabel);
             GUILayout.FlexibleSpace();
@@ -49,7 +49,7 @@ namespace DoubTech.Templates.Editor
                     templatePath.additionalPaths.Add(p);
                 }
             }
-            
+
             GUILayout.EndHorizontal();
 
             string toRemove = null;
@@ -73,7 +73,7 @@ namespace DoubTech.Templates.Editor
                         templatePath.additionalPaths[i] = p;
                     }
                 }
-                
+
                 GUILayout.EndHorizontal();
             }
 
@@ -82,7 +82,7 @@ namespace DoubTech.Templates.Editor
                 templatePath.additionalPaths.Remove(toRemove);
                 EditorUtility.SetDirty(templatePath);
             }
-            
+
             GUILayout.Space(16);
 
             if (GUILayout.Button("Sync"))
@@ -90,5 +90,5 @@ namespace DoubTech.Templates.Editor
                 TemplateSync.Sync(templatePath);
             }
         }
-    }   
+    }
 }

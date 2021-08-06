@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
-namespace DoubTech.Common.EditorExtensions
+namespace DoubTech.Templates.EditorExtensions
 {
     public static class EditorWindowExtensions
     {

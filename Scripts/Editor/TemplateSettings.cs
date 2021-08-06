@@ -3,7 +3,7 @@ using UnityEngine;
 using System.IO;
 using UnityEditor;
 
-namespace DoubTech.Templates.Editor
+namespace DoubTech.Templates
 {
     public class TemplateSettings : ScriptableObject
     {

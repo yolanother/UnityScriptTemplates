@@ -1,7 +1,6 @@
-﻿using DoubTech.Templates.Editor;
-using UnityEditor;
+﻿using UnityEditor;
 
-namespace Editor
+namespace DoubTech.Templates
 {
     public class ProjectTemplateSettingsProvider : BaseTemplateSettingsProvider
     {

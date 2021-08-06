@@ -2,7 +2,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace DoubTech.Templates.Editor
+namespace DoubTech.Templates
 {
     [InitializeOnLoad]
     public class TemplateSync
