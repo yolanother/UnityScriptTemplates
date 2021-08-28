@@ -1,0 +1,10 @@
+﻿#HEADER#
+using System;
+
+namespace #NAMESPACE#
+{
+    public interface #SCRIPTNAME#
+    {
+        #NOTRIM#
+    }
+}
