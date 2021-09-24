@@ -1,6 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace #NAMESPACE#
 {
     [CreateAssetMenu(fileName="#SOVTYPE#Variable", menuName="#SCRIPTNAME#")]
@@ -18,4 +22,48 @@ namespace #NAMESPACE#
 
         public #SOVUNALTEREDTYPE# Value => useConstant ? constantValue : variable.value;
     }
+
+    #if UNITY_EDITOR
+    [CustomPropertyDrawer(typeof(#SOVTYPE#Reference))]
+    public class #SOVTYPE#Drawer : PropertyDrawer
+    {
+        private GUIContent useConstantLabel = new GUIContent( "", "Use Constant");
+        private GUIContent useVariableLabel = new GUIContent("", "Use Variable");
+        private GUIContent emptyLabel = new GUIContent("");
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUIUtility.singleLineHeight;
+        }
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            var useConstant = property.FindPropertyRelative("useConstant");
+            var constantValue = property.FindPropertyRelative("constantValue");
+            var variable = property.FindPropertyRelative("variable");
+
+            var current = useConstant?.boolValue == true;
+            var l = current ? useVariableLabel : useConstantLabel;
+            var rect = EditorGUI.PrefixLabel(position, label);
+            var toggleRect = new Rect(rect);
+            toggleRect.width = 24;
+            var c = EditorGUI.Toggle(toggleRect, l, current);
+            if (c != current)
+            {
+                useConstant.boolValue = c;
+            }
+
+            rect.x += 24;
+            rect.width -= 24;
+            if (useConstant.boolValue)
+            {
+                EditorGUI.PropertyField(rect, constantValue, emptyLabel);
+            }
+            else
+            {
+                EditorGUI.PropertyField(rect, variable, emptyLabel);
+            }
+        }
+    }
+    #endif
 }
